@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[12]:
 
 
 osm_file = open("OSM Chester and Tarporley.xml", "r")
 
 
-# In[2]:
+# In[13]:
 
 
 
@@ -23,7 +23,7 @@ street_type_re = re.compile(r'\b\S+\.?$', re.IGNORECASE)
 expected = ["Street", "Avenue", "Boulevard", "Drive", "Court", "Place", "Square", "Lane", "Road", 
             "Trail", "Parkway", "Commons"]
 
-# UPDATE THIS VARIABLE
+
 mapping = { "St": "Street",
             "St.": "Street",
             "Ave" :"Avenue",
@@ -36,7 +36,7 @@ mapping = { "St": "Street",
         
             }
 
-
+#look to see if street type is in the expected variable list. If not display later in scrip.
 def audit_street_type(street_types, street_name):
     m = street_type_re.search(street_name)
     if m:
@@ -44,7 +44,7 @@ def audit_street_type(street_types, street_name):
         if street_type not in expected:
             street_types[street_type].add(street_name)
 
-
+#get data from above function
 def is_street_name(elem):
     return (elem.attrib['k'] == "addr:street")
 
@@ -61,7 +61,7 @@ def audit(osmfile):
     osm_file.close()
     return street_types
 
-
+#use mapping variable to update abreviations
 def update_name(name, mapping):
     dict_map = sorted(mapping.keys(), key=len,)
     for key in dict_map:
@@ -69,7 +69,7 @@ def update_name(name, mapping):
             if name.find(key):          
                 name = name.replace(key,mapping[key])
                 return name
-    # YOUR CODE HERE
+
 
     return name
 
@@ -79,7 +79,7 @@ def test():
     #assert len(st_types) == 3
     pprint.pprint(dict(st_types))
 
-    for st_type, ways in st_types.iteritems():
+    for st_type, ways in st_types.items():
         for name in ways:
             better_name = update_name(name, mapping)
             print (name, "=>", better_name)
